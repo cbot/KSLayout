@@ -20,6 +20,11 @@
         _subviewSpacingBlock = ^CGFloat(UIView *lastView, UIView *currentView, NSUInteger currentViewIndex) {
             return weakSelf.subviewSpacing;
         };
+        
+        _subviewSizeRatio = CGFLOAT_MIN;
+        _subviewSizeRatioBlock = ^CGFloat(UIView *currentView, NSUInteger currentViewIndex) {
+            return weakSelf.subviewSizeRatio;
+        };
     }
     return self;
 }
@@ -44,8 +49,10 @@
 
         NSDictionary *views = @{@"view" : view, @"lastView" : lastView ?: [[UIView alloc] init]};
 		
-        CGFloat subviewSpacing = settings.subviewSpacingBlock(lastView, view, [subviews indexOfObject:view]);
-        CGFloat subviewSize = settings.subviewSizeBlock(view, [subviews indexOfObject:view]);
+        NSUInteger subviewIndex = [subviews indexOfObject:view];
+        CGFloat subviewSpacing = settings.subviewSpacingBlock(lastView, view, subviewIndex);
+        CGFloat subviewSize = settings.subviewSizeBlock(view, subviewIndex);
+        CGFloat subviewSizeRatio = settings.subviewSizeRatioBlock(view, subviewIndex);
         
 		if (direction == KSLayoutDirectionVertical) {
 			[self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:[NSString stringWithFormat:@"|-%f-[view]-%f-|", settings.containerPadding.left, settings.containerPadding.right] options:kNilOptions metrics:nil views:views]];
@@ -56,7 +63,9 @@
 			}
 			
 			if (view == subviews.lastObject) {
-				[self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:[NSString stringWithFormat:@"V:[view]-%f-|", settings.containerPadding.bottom] options:kNilOptions metrics:nil views:views]];
+                NSLayoutConstraint *constraint = [NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeBottom multiplier:1 constant:0];
+                constraint.priority = 999;
+                [self addConstraint:constraint];
 			}
 		} else {
 			[self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:[NSString stringWithFormat:@"V:|-%f-[view]-%f-|", settings.containerPadding.top, settings.containerPadding.bottom] options:kNilOptions metrics:nil views:views]];
@@ -67,11 +76,16 @@
 			}
 			
 			if (view == subviews.lastObject) {
-				[self addConstraints:[NSLayoutConstraint constraintsWithVisualFormat:[NSString stringWithFormat:@"[view]-%f-|", settings.containerPadding.right] options:kNilOptions metrics:nil views:views]];
+                NSLayoutConstraint *constraint = [NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeTrailing relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeTrailing multiplier:1 constant:0];
+                constraint.priority = 999;
+				[self addConstraint:constraint];
 			}
 		}
 		
-        if (subviewSize != CGFLOAT_MIN) {
+        if (subviewSizeRatio != CGFLOAT_MIN) {
+            [self addConstraint:[NSLayoutConstraint constraintWithItem:view attribute:direction == KSLayoutDirectionVertical ? NSLayoutAttributeHeight : NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:self attribute:KSLayoutDirectionVertical ? NSLayoutAttributeHeight : NSLayoutAttributeWidth multiplier:subviewSizeRatio constant:0]];
+            
+        } else if (subviewSize != CGFLOAT_MIN) {
             [self addConstraint:[NSLayoutConstraint constraintWithItem:view attribute:direction == KSLayoutDirectionVertical ? NSLayoutAttributeHeight : NSLayoutAttributeWidth relatedBy:NSLayoutRelationEqual toItem:nil attribute:NSLayoutAttributeNotAnAttribute multiplier:1 constant:subviewSize]];
         }
 

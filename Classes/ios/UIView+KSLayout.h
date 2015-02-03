@@ -17,6 +17,8 @@ typedef NS_ENUM(NSUInteger, KSLayoutDirection) {
 @property (nonatomic, copy) CGFloat (^subviewSpacingBlock)(UIView *lastView, UIView *currentView, NSUInteger currentViewIndex);
 @property (nonatomic, assign) CGFloat subviewSize;
 @property (nonatomic, copy) CGFloat (^subviewSizeBlock)(UIView *currentView, NSUInteger currentViewIndex);
+@property (nonatomic, assign) CGFloat subviewSizeRatio;
+@property (nonatomic, copy) CGFloat (^subviewSizeRatioBlock)(UIView *currentView, NSUInteger currentViewIndex);
 @property (nonatomic, assign) BOOL autoRemoveSubviews;
 @end
 
