@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name         = "KSLayout"
-  s.version      = "1.0.1"
+  s.version      = "1.0.2"
   s.summary      = "A tiny library that helps to automatically layout subviews in a container view by creating the necessary constraints"
   s.homepage     = "https://github.com/cbot/KSLayout"
   s.license      = 'MIT'
