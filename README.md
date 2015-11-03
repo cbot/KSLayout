@@ -5,7 +5,7 @@ KSLayout is a tiny library that helps to automatically layout subviews in a cont
 ## Installation
 Use CocoaPods to add KSLayout to your project. Just add the following line to your Podfile.
 ```
-pod 'KSLayout', '~> 1.0.2'
+pod 'KSLayout', '~> 1.0.3'
 ```
 ## Example
 ```objective-c

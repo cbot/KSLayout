@@ -73,7 +73,7 @@ static char AssociatedObjectKeyStackedSubviewsConstraints;
 			}
 			
 			if (view == subviews.lastObject) {
-                NSLayoutConstraint *constraint = [NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeBottom multiplier:1 constant:0];
+                NSLayoutConstraint *constraint = [NSLayoutConstraint constraintWithItem:self attribute:NSLayoutAttributeBottom relatedBy:NSLayoutRelationEqual toItem:view attribute:NSLayoutAttributeBottom multiplier:1 constant:settings.containerPadding.bottom];
                 constraint.priority = 999;
                 [constraints addObject:constraint];
 			}
@@ -86,7 +86,7 @@ static char AssociatedObjectKeyStackedSubviewsConstraints;
 			}
 			
 			if (view == subviews.lastObject) {
-                NSLayoutConstraint *constraint = [NSLayoutConstraint constraintWithItem:view attribute:NSLayoutAttributeTrailing relatedBy:NSLayoutRelationEqual toItem:self attribute:NSLayoutAttributeTrailing multiplier:1 constant:0];
+                NSLayoutConstraint *constraint = [NSLayoutConstraint constraintWithItem:self attribute:NSLayoutAttributeTrailing relatedBy:NSLayoutRelationEqual toItem:view attribute:NSLayoutAttributeTrailing multiplier:1 constant:settings.containerPadding.right];
                 constraint.priority = 999;
                 [constraints addObject:constraint];
 			}
